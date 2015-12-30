@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns="http://www.springframework.org/schema/security" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+						http://www.springframework.org/schema/beans/spring-beans.xsd
+						http://www.springframework.org/schema/aop 
+						http://www.springframework.org/schema/aop/spring-aop.xsd
+						http://www.springframework.org/schema/context 
+						http://www.springframework.org/schema/context/spring-context.xsd
+						http://www.springframework.org/schema/tx 
+						http://www.springframework.org/schema/tx/spring-tx.xsd
+						http://www.springframework.org/schema/security 
+						http://www.springframework.org/schema/security/spring-security-3.0.xsd
+						
+	">
+
+ <!-- 自动配置模式，拦截所有请求，有ROLE_USER才可以通过 -->
+    <http auto-config="true">
+        <intercept-url pattern="/login.jsp*"  access="IS_AUTHENTICATED_ANONYMOUSLY" />
+        <intercept-url pattern="/**" access="ROLE_USER"/>
+        <form-login login-page="/login.jsp" authentication-failure-url="/login.jsp?login_error=1"/> 
+    </http>
+    <!-- 认证管理器。用户名密码都集成在配置文件中 --> 
+    <authentication-manager>
+        <authentication-provider>
+            <user-service>
+                <user name="sharp" password="sharp" authorities="ROLE_USER"/>
+            </user-service>
+        </authentication-provider>
+    </authentication-manager>
+    <!-- 指定中文资源 。默认命名空间是security,所以要加前缀beans: --> 
+     <beans:bean id="messageSource"
+        class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+        <beans:property name="basename"  value="classpath:org/springframework/security/messages_zh_CN"/>  
+     </beans:bean>
+    
+</beans:beans>
